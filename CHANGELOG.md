@@ -1,3 +1,8 @@
+## v1.4.205 — March 19, 2026
+- Redesigned changelog modal: styled version cards, collapsible entries, latest pinned open
+- Auto-updater overhaul: streaming download progress, UpdateBanner and UpdateGate components
+- Added 45s CDN cache retry to ensure update detection on fresh installs
+
 ## v1.4.204 — March 19, 2026
 - Test update: verify update progress button styling and streaming download
 
