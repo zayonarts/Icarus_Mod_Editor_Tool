@@ -1,3 +1,8 @@
+## v1.4.206 — March 19, 2026
+- Fixed update progress bar: now streams download chunks with live percentage
+- Fixed batch script closing after successful update; stays open only on error
+- Fixed "batch file cannot be found" error during self-replacement
+
 ## v1.4.205 — March 19, 2026
 - Redesigned changelog modal: styled version cards, collapsible entries, latest pinned open
 - Auto-updater overhaul: streaming download progress, UpdateBanner and UpdateGate components
