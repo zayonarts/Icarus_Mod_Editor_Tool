@@ -1,3 +1,6 @@
+## v1.4.204 — March 19, 2026
+- Test update: verify update progress button styling and streaming download
+
 ## v1.4.203 — March 19, 2026
 - Test update: verify optional UpdateBanner display and styling
 
