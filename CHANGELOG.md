@@ -1,3 +1,15 @@
+## v1.4.208 — March 19, 2026
+- Build: removed bundled development talent icons from the executable — exe is now significantly lighter
+- Talent Editor: icons are now fetched from GitHub at runtime and stored next to the exe (unchanged behaviour)
+- Talent Editor: added ⟳ reload button to refresh icons from local cache without re-downloading
+- Talent Editor: icon URLs are now cache-busted after each fetch so newly downloaded icons show immediately
+
+## v1.4.207 — March 19, 2026
+- Modinfo Editor: warn when a mod's description is empty (Daedalus rejects empty-string description)
+- Modinfo Editor: show red ⚠ badge on mod list items with no description
+- Modinfo Editor: sanitize empty-string optional fields on file load so they are not written back
+- Modinfo Editor: show amber ⚠ badge on mod list items with duplicate names
+
 ## v1.4.206 — March 19, 2026
 - Fixed update progress bar: now streams download chunks with live percentage
 - Fixed batch script closing after successful update; stays open only on error
