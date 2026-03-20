@@ -1,3 +1,8 @@
+## v1.4.209 — March 20, 2026
+- App: changelog categories — changes are now grouped by module with colored dividers
+- App: changelog DEV section — development-only changes shown separately, dimmed, at the bottom of each entry
+- App: changelog lines now auto-capitalize
+
 ## v1.4.208 — March 19, 2026
 - [DEV] Build: removed bundled development talent icons from the executable — exe is now significantly lighter
 - [DEV] Talent Editor: icons are now fetched from GitHub at runtime and stored next to the exe (unchanged behaviour)
