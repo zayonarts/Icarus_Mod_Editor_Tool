@@ -9,24 +9,24 @@
 - Modinfo Editor: show amber ⚠ badge on mod list items with duplicate names
 
 ## v1.4.206 — March 19, 2026
-- Fixed update progress bar: now streams download chunks with live percentage
-- Fixed batch script closing after successful update; stays open only on error
-- Fixed "batch file cannot be found" error during self-replacement
+- App: fixed update progress bar — now streams download chunks with live percentage
+- App: fixed batch script closing after successful update; stays open only on error
+- App: fixed "batch file cannot be found" error during self-replacement
 
 ## v1.4.205 — March 19, 2026
-- Redesigned changelog modal: styled version cards, collapsible entries, latest pinned open
-- Auto-updater overhaul: streaming download progress, UpdateBanner and UpdateGate components
-- Added 45s CDN cache retry to ensure update detection on fresh installs
+- App: redesigned changelog modal — styled version cards, collapsible entries, latest pinned open
+- App: auto-updater overhaul — streaming download progress, UpdateBanner and UpdateGate components
+- App: added 45s CDN cache retry to ensure update detection on fresh installs
 
 ## v1.4.204 — March 19, 2026
-- Test update: verify update progress button styling and streaming download
+- App: test update — verify update progress button styling and streaming download
 
 ## v1.4.203 — March 19, 2026
-- Test update: verify optional UpdateBanner display and styling
+- App: test update — verify optional UpdateBanner display and styling
 
 ## v1.4.202 — March 19, 2026
-- Test update: version bump to verify the auto-updater flow
+- App: test update — version bump to verify the auto-updater flow
 
 ## v1.4.201 — March 19, 2026
-- Initial public release
-- Modinfo Editor module
+- App: initial public release
+- Modinfo Editor: initial release
