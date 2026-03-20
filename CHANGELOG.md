@@ -1,3 +1,11 @@
+## v1.4.215 — March 20, 2026
+- App: update gate download button now shows live progress bar and percentage (same as update banner)
+- [DEV] All Editors: added tinted repeating background pattern (IconBG-Pattern-1) tinted to each module's accent color
+- Modinfo Editor: background pattern visible only when no file is selected, hidden while editing
+- [DEV] Recipes Editor: background pattern visible only on no-IMM and no-file-open screens
+- [DEV] Item Editor: background pattern visible only on no-IMM and no-file-open screens
+- [DEV] Talent Editor: background pattern visible only on the no-IMM screen
+
 ## v1.4.209 — March 20, 2026
 - App: changelog categories — changes are now grouped by module with colored dividers
 - App: changelog DEV section — development-only changes shown separately, dimmed, at the bottom of each entry
