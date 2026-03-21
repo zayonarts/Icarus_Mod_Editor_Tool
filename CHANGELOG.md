@@ -19,7 +19,6 @@
 - [DEV] Item Editor: item list shows colored dot indicators per item — green dot for added items, amber dot for modified or renamed items
 - [DEV] Item Editor: mod file is auto-created (blank) when the selected file path does not yet exist on disk
 - [DEV] Item Editor: added save caching — all edits are held in memory and only written to disk when the toolbar Save button is clicked; Save button is disabled when there are no unsaved changes
-- [DEV] App: changelog modal — removed duplicate category aliases (Recipe Editor / Talents Editor)
 - [DEV] Item Editor: DeployableSetup SnapActorTags and SnapSocketsOrTags fields now use inline chip-style tag editor (add via Enter/comma, remove per chip) instead of comma-separated text input
 - [DEV] Item Editor: DeployableSetup Add Field dropdown — fixed overflow:hidden overriding overflowY:auto, dropdown now scrolls correctly
 - [DEV] Item Editor: Deployable variants — copy button label changed from "Mod Setup" to "Mod" to match all other editors
