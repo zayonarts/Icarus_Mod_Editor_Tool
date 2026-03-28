@@ -1,8 +1,14 @@
-## v1.4.323 - March 28, 2026
+## v1.4.326 - March 28, 2026 - Changelog and Scroll Fixes.
+[Update Message]: Changelog and Scroll Fixes.
+- App: fix — Changelog modal: `Recipe Editor` label was missing from all Recipe Editor entries because the category lookup key was spelled `Recipes Editor` (with an 's') while the changelog uses `Recipe Editor`; fixed the key in `CATEGORY_MODULE`
+- App: fix — Changelog modal: `[DEV]` entries for named categories (e.g. `[DEV] App: ...`) were incorrectly rendered above the DEV divider alongside their non-DEV counterparts; root cause was both DEV and non-DEV items sharing the same group key, causing the group's `isDev` flag to be set by whichever entry arrived first; fixed by assigning DEV entries of named categories a composite key (`cat + '__dev'`) so they form a separate group that sorts below the divider; label and accent color are resolved by stripping the suffix at render time
+- [DEV] Item Editor: fix — switching items reset the editor scroll position to the top; root cause was `key={selectedItem.Name}` on `ItemEditPanel` which caused React to fully unmount and remount the panel on every item click; fixed by removing the `key` prop and instead tracking scroll position as a 0–1 percentage via `scrollPctRef` updated on every `onScroll` event; a `useLayoutEffect` on `item.Name` restores the percentage synchronously after each new item renders (before paint) so there is no visible jump; proportional restore handles items with different total form heights gracefully
+
+## v1.4.323 - March 28, 2026 - DEV-Only Update (no impact for regular users)
 [Update Message]: Tiny fix for Item Editor, DEV Only.
 - [DEV] Item Editor: fix — DurableEditor ItemsForRepair item picker upgraded from a hand-rolled two-panel modal (table list + flat row list) to the shared `RowBrowserOverlay` with All / Base Game / Modded tabs; the Modded tab reads item names live from the opened mod file's `Items-D_ItemsStatic.json` block; NoRecipe_RequiredRecipeSet picker upgraded to `RowPickerOverlay` (flat searchable list from D_RecipeSets); all bespoke picker state, refs, effects, and inline JSX removed from DurableEditor
 
-## v1.4.322 - March 28, 2026
+## v1.4.322 - March 28, 2026 - Recipe Editor Release
 [Update Message]: Launched the Recipe Editor !!! - New feedback button, feel free to report anything, give me suggestions or bugs, i'll sort trough them xD.
 - App: feature — wiki button added to the Modinfo Editor and Recipe Editor toolbars
 - App: release — Recipe Editor promoted to public; no longer requires a sentinel key file to access; moved from `DEV_MODULES` into `MODULE_REGISTRY` alongside the Modinfo Editor; `devTier: 'DEV'` badge removed; `check_recipes_unlock` per-module unlock effect removed; initial state now included on app boot for all users
