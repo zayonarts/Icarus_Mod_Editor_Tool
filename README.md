@@ -38,6 +38,27 @@ The Modinfo Editor lets you manage all entries inside a `modinfo.json` file — 
 
 ---
 
+### Recipe Editor
+
+> Create and edit crafting recipes inside `.json` or `.exmod` mod files.
+
+The Recipe Editor lets you manage all recipe entries inside a mod file — adding new recipes, editing existing ones, and defining inputs/outputs without touching raw JSON.
+
+**Features:**
+
+- **Open & Save** — Load any `.json` or `.exmod` mod file from disk. Save with `Ctrl+S` or the toolbar. Unsaved changes are tracked with a dirty indicator.
+- **Recipe list panel** — All recipes in the file listed on the left with a search bar. Resizable panel divider so you can give more space to what matters.
+- **Recipe editor panel** — Click any recipe to edit its full definition on the right:
+  - **Output** — Item name and quantity
+  - **Inputs** — Add, remove, and reorder ingredient rows (item + quantity)
+  - **Category, talent, and other recipe fields** — Picked from searchable dropdowns
+- **Pending edits system** — Changes are held in memory until you save, letting you review and discard individual edits before committing.
+- **Apply All modal** — Review a diff of all pending changes (old → new) before writing to disk.
+- **Base recipes reference** — Open a side window with the full base-game recipe list for quick reference while editing.
+- **Multi-file combined view** — Open a group of mod files together and edit across all of them in a single session.
+
+---
+
 ## Auto-Updater
 
 IMET checks for updates on launch. When a new version is available, a banner appears at the top of the window. Updates are opt-in — the app will never update without your confirmation.
@@ -50,7 +71,6 @@ The following modules are in development and will be released in future versions
 
 | Module | Description |
 |---|---|
-| Recipe Editor | Create and edit crafting recipes |
 | Talent Editor | Manage talent tree definitions |
 | Item Creator | Build new item entries |
 
