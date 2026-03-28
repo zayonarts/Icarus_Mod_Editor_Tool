@@ -1,3 +1,8 @@
+## v1.4.328 - March 28, 2026
+[Update Message]: Tiny Item Editor fix & Update banner now shows the release message..
+- App: fix — update banner now shows the `[Update Message]:` text from `CHANGELOG.md` instead of the generic `"Release vX.X.X"` placeholder from `update.json`; `UpdateBanner` fetches the changelog on mount, parses the message for the matching version heading, and displays it next to the version number; falls back to `manifest.notes` if the fetch fails or no message line is found
+- [DEV] Item Editor: fix — `Skinning_Efficiency` was missing from the ToolDamageEditor optional fields list; it is used by all knives, machete, and sickle rows in D_ToolDamage but was omitted from both `OPTIONAL_FIELDS` and the initial `shownOpt` population, causing the stat to silently disappear when modding those items; added in correct order between `Mining_Efficiency` and `Reaping_Efficiency`, matching the D_ToolDamage Defaults field ordering
+
 ## v1.4.326 - March 28, 2026 - Changelog and Scroll Fixes.
 [Update Message]: Changelog and Scroll Fixes.
 - App: fix — Changelog modal: `Recipe Editor` label was missing from all Recipe Editor entries because the category lookup key was spelled `Recipes Editor` (with an 's') while the changelog uses `Recipe Editor`; fixed the key in `CATEGORY_MODULE`
