@@ -1,3 +1,7 @@
+## v1.4.323 - March 28, 2026
+[Update Message]: Tiny fix for Item Editor, DEV Only.
+- [DEV] Item Editor: fix — DurableEditor ItemsForRepair item picker upgraded from a hand-rolled two-panel modal (table list + flat row list) to the shared `RowBrowserOverlay` with All / Base Game / Modded tabs; the Modded tab reads item names live from the opened mod file's `Items-D_ItemsStatic.json` block; NoRecipe_RequiredRecipeSet picker upgraded to `RowPickerOverlay` (flat searchable list from D_RecipeSets); all bespoke picker state, refs, effects, and inline JSX removed from DurableEditor
+
 ## v1.4.322 - March 28, 2026
 [Update Message]: Launched the Recipe Editor !!! - New feedback button, feel free to report anything, give me suggestions or bugs, i'll sort trough them xD.
 - App: feature — wiki button added to the Modinfo Editor and Recipe Editor toolbars
