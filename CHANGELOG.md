@@ -1,3 +1,15 @@
+## v1.4.409 - March 31, 2026
+[Update Message]: Visual Overhaul Remaining Stuff - Wiki and Base Recipe Viewer. + Minor Fix
+- Recipe Editor: fix right click menu positioning offset for input/output.
+- App: disabled native right click menu and built custom one for very strict needs.
+- Modinfo Editor: fixed some visual bugs of fields/right click menus.
+- Recipe Editor: fixed some visual bugs of fields/right click menus.
+- Recipe Editor: moved Feature Level out of Advanced options.
+- Recipe Editor: the Base Recipe viewer overhaul, forgot completly about that as well.
+- Recipe Editor: fix file closing issue, flashing white border on close.
+- App: Wiki Visual Overhaul, forgot about it also fixed pop-up issue.
+- App: updater now checks every 5 minutes while app is open for updates.
+
 ## v1.4.400 - March 31, 2026
 [Update Message]: Complete Visual Overhaul - Modinfo Editor & Recipe Editor & Changelogs.
 - App: A lot of other changes done that are not listed.
@@ -54,17 +66,17 @@
 - App: fix - the update notification banner now shows the actual release message from the changelog instead of just a generic version number
 - [DEV] Item Editor: fix - Skinning Efficiency was silently being removed when modding knives, machetes, and sickles; it is now correctly preserved
 
-## v1.4.326 - March 28, 2026 - Changelog and Scroll Fixes.
+## v1.4.326 - March 28, 2026
 [Update Message]: Changelog and Scroll Fixes.
 - App: fix - Recipe Editor changes were not appearing under the Recipe Editor section in the changelog modal
 - App: fix - developer-only changelog entries were appearing in the wrong section of the changelog modal
 - [DEV] Item Editor: fix - switching between items was resetting the scroll position back to the top of the edit form; it now stays where you left it
 
-## v1.4.323 - March 28, 2026 - DEV-Only Update (no impact for regular users)
+## v1.4.323 - March 28, 2026
 [Update Message]: Tiny fix for Item Editor, DEV Only.
 - [DEV] Item Editor: fix - the item pickers inside the Durability and Recipe Set editors were replaced with the modern tabbed browser (All / Base Game / Modded) used everywhere else in the app
 
-## v1.4.322 - March 28, 2026 - Recipe Editor Release
+## v1.4.322 - March 28, 2026
 [Update Message]: Launched the Recipe Editor !!! - New feedback button, feel free to report anything, give me suggestions or bugs, i'll sort trough them xD.
 - App: feature - a wiki button was added to the Modinfo Editor and Recipe Editor toolbars
 - App: release  the Recipe Editor is now publicly available to all users; it no longer requires a special unlock key
@@ -101,7 +113,7 @@
 - [DEV] App: improve  the Design Panel tab is pinned to the far right of the tab bar, cannot be dragged, and hides the IMM Path widget while active
 - [DEV] App: improve  the Design Panel tab is excluded from the draggable tab section and cannot be reordered
 
-## v1.4.288 - March 22, 2026 - DEV-Only Update (no impact for regular users)
+## v1.4.288 - March 22, 2026
 - [DEV] Item Editor: fix - fixed a harmless internal warning about nested component updates; no user-facing change
 - [DEV] Item Editor: fix - when an Itemable component row is renamed, the internal display name and description keys now update to match the new row name
 - [DEV] Item Editor: fix - the same display name and description key update now also applies when a Highlightable component row is renamed
@@ -129,7 +141,7 @@
 - [DEV] Item Editor: fix - saved files now use 4-space indentation, matching the format used by the rest of the app
 - [DEV] Talent Editor: fix - icon download progress messages were showing raw character codes (e.g. \u2026) instead of the actual symbols; now displays correctly
 
-## v1.4.262  March 21, 2026  DEV-Only Update (no impact for regular users)
+## v1.4.262  March 21, 2026
 - [DEV] Item Editor: fix - fixed an infinite loop that could occur when the Item Editor was open; no user-facing change
 - [DEV] Item Editor: rename - the Cancel button on the rename warning panel now fully exits rename mode, instead of only hiding the warning while leaving the rename box open
 - [DEV] Item Editor: rename - the rename warning panel now renders full-width below the name row, keeping the Remove button fixed in the top-right corner
