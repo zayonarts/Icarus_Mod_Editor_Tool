@@ -1,4 +1,5 @@
-## v1.4.409 - March 31, 2026
+
+## v1.4.409 - April 3, 2026
 [Update Message]: Visual Overhaul Remaining Stuff - Wiki and Base Recipe Viewer. + Minor Fix
 - Recipe Editor: fix right click menu positioning offset for input/output.
 - App: disabled native right click menu and built custom one for very strict needs.
@@ -10,7 +11,7 @@
 - App: Wiki Visual Overhaul, forgot about it also fixed pop-up issue.
 - App: updater now checks every 5 minutes while app is open for updates.
 
-## v1.4.400 - March 31, 2026
+## v1.4.400 - April 3, 2026
 [Update Message]: Complete Visual Overhaul - Modinfo Editor & Recipe Editor & Changelogs.
 - App: A lot of other changes done that are not listed.
 - App: update status bar: Complete Visual Overhaul.
