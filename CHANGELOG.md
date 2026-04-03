@@ -1,186 +1,212 @@
+## v1.4.400 - March 31, 2026
+[Update Message]: Complete Visual Overhaul - Modinfo Editor & Recipe Editor & Changelogs.
+- App: A lot of other changes done that are not listed.
+- App: update status bar: Complete Visual Overhaul.
+- App: changelog: Complete Visual Overhaul.
+- Recipe Editor: Complete Visual Overhaul.
+- Recipe Editor: fix - UTF-8 opening files that had different UTF-8 used was not read, now everything is allowed
+- App: fix - loading mod files that were saved with BOM encoding no longer causes a "not valid UTF-8" error
+- App: fix - "Remove from Recent" in the right-click file menu now works correctly
+- Modinfo Editor: Complete Visual Overhaul.
+- Modinfo Editor: fix - the editor panels no longer briefly flash into view before the file has finished loading
+- Modinfo Editor: fix - improved internal load tracking to prevent a rare edge case where the editor could mistakenly appear before the file was fully ready
+- App: fix - the accent colour highlight on hovered Recent Files entries now fades in smoothly instead of snapping on instantly
+- App: fix - the Recent Files dropdown and right-click menu now correctly use the app's theme colours for their glass-style background
+- App: fix - the accent colour (set in the colour picker) now applies correctly inside the Recent Files dropdown
+- App: fix - the Recent Files dropdown and context menu now show the correct glass blur effect; previously the toolbar was silently blocking the blur from appearing
+- [DEV] Item Editor: feature - added a Feature Level field at the very bottom of the item editor; lets you set which game feature tier the item requires; selecting (none) removes the field from the output entirely
+- Modinfo Editor: fix - the GitHub file picker was cutting off the footer and action buttons when the file list was long; the dialog now has a fixed height so everything fits correctly
+- Modinfo Editor: restyle - the GitHub file picker dialog has been visually updated to match the rest of the app's popup style
+- App: feature - a new shared popup layout is now used across all app dialogs (sticky header, tabs, scrollable body, footer) making them look and behave consistently
+- App: feature - all dialogs now use a proper dark backdrop that always appears behind the dialog window
+- App: feature - scrollbars inside popup dialogs are now slim and subtle
+- App: fix - several shared styling classes were cleaned up and made consistent across the whole app
+- App: fix - several elements that were hardcoded to a fixed blue colour now correctly respond to the module's accent colour picker
+- App: fix - the status bar badge and the file path strip now correctly update colour when you change the accent colour picker
+- [DEV] Item Editor: feature - all item and asset pickers now scroll to and highlight the currently selected value when you open them
+
 ## v1.4.343 - March 29, 2026
-[Update Message]: Talent Editor graph improvements — rename safety, wheel zoom, and boundary guides.
-- [DEV] Talent Editor: fix — clicking a graph canvas node while the name field had unsaved text silently discarded the typed rename; graph node `onClick` handlers bypassed `handleSelectTalent` and called `setSelectedTalent` directly, skipping the pending-rename flush; fixed by routing all graph node clicks (regular nodes, reroute nodes, context-menu right-click selection) through `handleSelectTalent`; added a `flushPendingRename()` helper for null-selection sites (canvas background click, rubber-band box that selects 0 or 2+ nodes, list-background click) that commits any pending rename while keeping the current selection unchanged; rubber-band selection of exactly one node now also routes through `handleSelectTalent` so a typed rename is committed before switching to the rubber-banded target
-- [DEV] Talent Editor: fix — scrolling the mouse wheel over the graph canvas was panning the view up and down instead of zooming; the wheel handler had an `else` branch that applied `deltaY` as a pan offset whenever Ctrl was not held; removed the else branch so the wheel always zooms at the cursor position regardless of modifier keys; added a `deltaY === 0` early-return to safely ignore horizontal trackpad swipes
-- [DEV] Talent Editor: feature — added dashed guide lines at the scene origin (x=0 and y=0) rendered inside the connections SVG layer so they transform correctly with pan and zoom; lines are `rgba(255,255,255,0.18)` (subtle white) with a 6/5 dash pattern and stroke-width and dash-length both divided by `graphZoom` so they remain visually constant at all zoom levels; gives users a clear visual anchor for the coordinate boundary
-- [DEV] Talent Editor: feature — added a third dashed boundary line at scene `Y=1350` that only renders when the active tab is a Blueprint tier page (`activeTab.startsWith('Blueprint_')`); matches the same style as the 0,0 guide lines; hidden on all non-Blueprint trees since their layout boundaries differ
-- [DEV] Talent Editor: fix — renaming a node and then clicking a different node (without first pressing Enter or clicking outside the field) silently discarded the typed name; root cause was relying solely on `onBlur` which React 18's concurrent scheduler does not guarantee will fire when an input unmounts due to a `key` change; fixed by adding `onChange` to track the live input value in `renameValueRef`, creating a `handleSelectTalent(name, shiftKey)` wrapper used by all list-item click handlers that reads `renameValueRef` and flushes any pending rename (targeting the clicked talent for selection, not the renamed one) before switching selection; `onBlur` still fires as a backup and clears `renameValueRef` first so the rename is never applied twice; also added `selectAfter` parameter to `renameTalent` so callers can specify which talent should be selected after the rename operation completes
-- [DEV] App: fix — Talent Editor (and other gated modules) lost their recent files list on every restart; root cause was `setStates` being called inside `setModules` updater callbacks, creating a nested state update that React could schedule after the second-pass recents restore, overwriting the restored values with a fresh `defaultModuleState()`; fixed by moving all `setStates` calls out of `setModules` updaters so they are independent top-level calls; also added a `states[m.id]` guard in the module render map so a brief gap between the two state updates can never crash the app with "Cannot read properties of undefined"
-- [DEV] Talent Editor: fix — custom talent pages defined in a mod file were no longer auto-revealed in the tab bar after the drag-and-drop bug fix; the old tab auto-select effect depended on talent items referencing a tree, so custom trees with no talents yet were silently skipped; fixed by reading all tree names from `treeItems` (not just talent references) and making all of them visible on file load; also fixed separately: after a drag the second+ drags were moving the wrong item because `addedOrd` was built from all custom talents across all tabs while the drag `from` index only reflected the active tab's rendered subset; fixed by storing the rendered active-tab name list in `listRenderedAddedRef` and using name-based splice in `onUp` instead of raw index math against the full ref array
-- [DEV] Talent Editor: improve — drag-to-reorder of custom talents now matches the smoothness of the Recipe Editor; dragged item was previously left visible at 0.3 opacity (creating a double-visual with the floating ghost); it is now replaced with an invisible zero-height placeholder exactly like the Recipe Editor pattern; ghost position changed from `cursor + 10px right` to `cursor - 20px left` (centred under the cursor); added `filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5))` to the ghost; ghost no longer flickers at initial position on mousedown (mousePos is now set only in the first mousemove, not on mousedown); drop-zone placeholder now uses `background: accent12` matching Recipe Editor style
-- [DEV] Talent Editor: fix — renaming multiple talents in sequence only applied the last rename; root cause was the `onBlur` handler closing over `selectedTalent` at render time — clicking another talent changed `selectedTalent` to the new talent before the blur fired, so every rename was executed against the wrong (newly selected) talent; fixed by adding a `renameFromRef` that captures the talent name when the name input mounts and reading from it in the rename handler instead of the state variable; also fixed a secondary issue where field edits made after the input mounted could be lost on rename because the updater was using a closed-over snapshot of the talent data rather than the live `prev` state
+[Update Message]: Talent Editor graph improvements - rename safety, wheel zoom, and boundary guides.
+- [DEV] Talent Editor: fix - typing a rename for a node and then clicking away or onto another node no longer silently discards what you typed; the rename is now always saved before switching selection
+- [DEV] Talent Editor: fix - scrolling the mouse wheel over the graph canvas now always zooms in and out; it was previously panning the view up and down when Ctrl was not held
+- [DEV] Talent Editor: feature - dashed guide lines now appear at the X=0 and Y=0 axes on the graph canvas, giving a clear visual anchor for the coordinate origin
+- [DEV] Talent Editor: feature - a dashed boundary line now appears at Y=1350 on Blueprint tier pages to mark the layout boundary for that tree
+- [DEV] Talent Editor: fix - typing a rename and clicking elsewhere without pressing Enter no longer loses the name you typed
+- [DEV] App: fix - the Recent Files list for the Item Editor and Talent Editor was being wiped every time the app restarted
+- [DEV] Talent Editor: fix - custom talent tree pages were no longer appearing in the tab bar after the drag-and-drop fix; they now always show correctly on file load; also fixed a bug where doing a second drag would move the wrong item
+- [DEV] Talent Editor: improve  dragging custom talents to reorder them is now much smoother; the dragged item is replaced by an invisible placeholder, the ghost follows your cursor correctly, and the drop zone is clearly marked
+- [DEV] Talent Editor: fix - when renaming multiple talents one after another, only the last rename was being saved; all renames now apply correctly in sequence
 
 ## v1.4.334 - March 28, 2026
-[Update Message]: Item Editor fixes — duplicate menu, recent files, and a build type error.
-- App: fix — recent files (and accent colors) for gated modules (Item Editor, Talent Editor) were silently lost on every restart; root cause was that these modules are not in `INITIAL_STATES` at startup so the config load pass in step 1 could not find their state entries and dropped the saved values; the module unlock checks in step 2 then created fresh default state, permanently discarding the recents; fixed by saving the loaded config object and running a second pass after all unlock checks complete to apply persisted `recentFiles` and `accentColors` to any newly-unlocked module whose state is still at defaults
-- [DEV] Item Editor: fix — duplicate item menu (shallow/deep copy) disappeared the moment the mouse moved toward it; root cause was the scroll container's `overflowY: auto` creating a CSS clip context that clipped pointer events for absolutely-positioned children overflowing its bounds — moving the cursor downward into the menu area fell through to the item rows below, triggering `onMouseLeave` on the row and closing the menu; fixed by measuring the button position on click via `getBoundingClientRect`, storing it in a `dupeMenuPos` state, and rendering the menu with `position: fixed` at screen coordinates after the scroll container in the DOM — completely outside any clip context
-- Recipe Editor: fix — TypeScript build error `Property 'DataTableName' does not exist on type '{ RowName?: string }'` in `canonicalizeRecipeItem`; the `CharacterRequirement` field type was declared with only `RowName` but the canonicalize function correctly writes `DataTableName` alongside it; fixed by adding `DataTableName?: string` to the type
+[Update Message]: Item Editor fixes  duplicate menu, recent files, and a build type error.
+- App: fix - the Recent Files list and accent colour settings for the Item Editor and Talent Editor were being lost every time the app restarted
+- [DEV] Item Editor: fix - the Duplicate item menu (shallow/deep copy) was disappearing the moment the mouse moved toward it; it now stays open correctly
+- Recipe Editor: fix - fixed an internal code error that had no impact on users
 
 ## v1.4.331 - March 28, 2026
 [Update Message]: Recipe Editor field order fix + multi Recipe Set support & Startup loading screen added.
-- App: feature — added a full-screen splash/loading screen that displays during startup instead of showing a frozen blank window; a red-accented progress bar advances through four async init steps (load config → check module unlocks → check for updates → ready); the screen enforces a 1.5-second minimum display time to prevent a flash if startup completes instantly; the background uses the same tinted icon-pattern technique used elsewhere in the app; the overlay fades out smoothly when all init steps are complete and then unmounts from the DOM, leaving normal app startup fully transparent to the user
-- Recipe Editor: feature — Recipe Sets field now supports multi-select; clicking opens a new `MultiListPickerModal` that keeps itself open while toggling selections (no close-on-click); selected sets appear as removable accent badge chips in the picker header; "(clear all)" row at the top deselects everything; clicking the backdrop or the "Done" button commits; the field displays all active sets joined by spaces; output file writes the correct array-of-objects structure (`[{ RowName, DataTableName: "D_RecipeSets" }, ...]`) matching the game format
-- Recipe Editor: fix — saving a recipe no longer scrambles field ordering; root cause was `JSON.stringify` serialising JavaScript object keys in insertion order, which varied depending on how the editor mutated each recipe (spread operators append new keys at the end, and the new-recipe stub used a completely wrong order); fixed by adding a `canonicalizeRecipeItem` function that rebuilds every recipe object with keys in the exact order used by `D_ProcessorRecipes.json` (Name → bForceDisableRecipe → Requirement → SessionRequirement → CharacterRequirement → RequiredMillijoules → RecipeSets → ResourceCostMultipliers → Inputs → QueryInputs → ResourceInputs → Container → bSelectOutputItemRandomly → bContainsContainer → ItemIconOverride → Outputs → ResourceOutputs → Refundable → ExperienceMultiplier → Metadata → Audio); default-value fields are omitted to keep mod files clean; sub-object field order is also enforced (Element: RowName → DataTableName; SessionRequirement: DataTableName before RowName per game convention; Outputs entries always include DynamicProperties and Alterations); the function is applied to every recipe item in `doSaveFile` just before writing to disk
+- App: feature - the app now shows a proper animated loading screen on startup instead of a frozen blank window; a progress bar moves through the startup steps and fades out when everything is ready
+- Recipe Editor: feature - the Recipe Sets field now supports picking multiple sets at once; a multi-select window opens, lets you toggle sets on and off, and closes when you press Done
+- Recipe Editor: fix - saving a recipe no longer rearranges the field order in the output file; fields are always written in the order the game expects
 
 ## v1.4.328 - March 28, 2026
 [Update Message]: Tiny Item Editor fix & Update banner now shows the release message..
-- App: fix — update banner now shows the `[Update Message]:` text from `CHANGELOG.md` instead of the generic `"Release vX.X.X"` placeholder from `update.json`; `UpdateBanner` fetches the changelog on mount, parses the message for the matching version heading, and displays it next to the version number; falls back to `manifest.notes` if the fetch fails or no message line is found
-- [DEV] Item Editor: fix — `Skinning_Efficiency` was missing from the ToolDamageEditor optional fields list; it is used by all knives, machete, and sickle rows in D_ToolDamage but was omitted from both `OPTIONAL_FIELDS` and the initial `shownOpt` population, causing the stat to silently disappear when modding those items; added in correct order between `Mining_Efficiency` and `Reaping_Efficiency`, matching the D_ToolDamage Defaults field ordering
+- App: fix - the update notification banner now shows the actual release message from the changelog instead of just a generic version number
+- [DEV] Item Editor: fix - Skinning Efficiency was silently being removed when modding knives, machetes, and sickles; it is now correctly preserved
 
 ## v1.4.326 - March 28, 2026 - Changelog and Scroll Fixes.
 [Update Message]: Changelog and Scroll Fixes.
-- App: fix — Changelog modal: `Recipe Editor` label was missing from all Recipe Editor entries because the category lookup key was spelled `Recipes Editor` (with an 's') while the changelog uses `Recipe Editor`; fixed the key in `CATEGORY_MODULE`
-- App: fix — Changelog modal: `[DEV]` entries for named categories (e.g. `[DEV] App: ...`) were incorrectly rendered above the DEV divider alongside their non-DEV counterparts; root cause was both DEV and non-DEV items sharing the same group key, causing the group's `isDev` flag to be set by whichever entry arrived first; fixed by assigning DEV entries of named categories a composite key (`cat + '__dev'`) so they form a separate group that sorts below the divider; label and accent color are resolved by stripping the suffix at render time
-- [DEV] Item Editor: fix — switching items reset the editor scroll position to the top; root cause was `key={selectedItem.Name}` on `ItemEditPanel` which caused React to fully unmount and remount the panel on every item click; fixed by removing the `key` prop and instead tracking scroll position as a 0–1 percentage via `scrollPctRef` updated on every `onScroll` event; a `useLayoutEffect` on `item.Name` restores the percentage synchronously after each new item renders (before paint) so there is no visible jump; proportional restore handles items with different total form heights gracefully
+- App: fix - Recipe Editor changes were not appearing under the Recipe Editor section in the changelog modal
+- App: fix - developer-only changelog entries were appearing in the wrong section of the changelog modal
+- [DEV] Item Editor: fix - switching between items was resetting the scroll position back to the top of the edit form; it now stays where you left it
 
 ## v1.4.323 - March 28, 2026 - DEV-Only Update (no impact for regular users)
 [Update Message]: Tiny fix for Item Editor, DEV Only.
-- [DEV] Item Editor: fix — DurableEditor ItemsForRepair item picker upgraded from a hand-rolled two-panel modal (table list + flat row list) to the shared `RowBrowserOverlay` with All / Base Game / Modded tabs; the Modded tab reads item names live from the opened mod file's `Items-D_ItemsStatic.json` block; NoRecipe_RequiredRecipeSet picker upgraded to `RowPickerOverlay` (flat searchable list from D_RecipeSets); all bespoke picker state, refs, effects, and inline JSX removed from DurableEditor
+- [DEV] Item Editor: fix - the item pickers inside the Durability and Recipe Set editors were replaced with the modern tabbed browser (All / Base Game / Modded) used everywhere else in the app
 
 ## v1.4.322 - March 28, 2026 - Recipe Editor Release
 [Update Message]: Launched the Recipe Editor !!! - New feedback button, feel free to report anything, give me suggestions or bugs, i'll sort trough them xD.
-- App: feature — wiki button added to the Modinfo Editor and Recipe Editor toolbars
-- App: release — Recipe Editor promoted to public; no longer requires a sentinel key file to access; moved from `DEV_MODULES` into `MODULE_REGISTRY` alongside the Modinfo Editor; `devTier: 'DEV'` badge removed; `check_recipes_unlock` per-module unlock effect removed; initial state now included on app boot for all users
-- [DEV] Item Editor: fix — TypeScript error in D_ItemTemplate section: `(i as TemplRow)` casts on `File_Items` (typed as `ItemStaticRow[]`) were rejected by the compiler because `TemplRow` requires `ItemStaticData` which `ItemStaticRow` does not declare — neither type sufficiently overlaps; fixed all three cast sites (`itemTemplateRow` useMemo find, `handleAttachItemTemplate` position search, `handleDetachItemTemplate` filter) by going through `unknown` first (`as unknown as TemplRow`)
-- Recipe Editor: feature — resizable list/editor panel divider; an invisible 8px drag handle sits between the recipe list column and editor column; hovering shows a `col-resize` cursor; dragging updates both panels live using `window` mousemove/mouseup listeners; width is clamped to 160–520px; on release the chosen width is persisted to `localStorage` under `recipes-editor-list-width` and restored on next load; right-clicking the handle shows a context menu with a "↺ Reset width" option that snaps back to the default 240px and removes the stored value
-- [DEV] App: change — footer "bug report" pill renamed to "feedback"; title updated to "Report a bug or suggest a feature on GitHub"; the button now serves both bug reports and feature suggestions via GitHub Issues
-- [DEV] App: feature — "bug report" pill button added to the footer status bar row, sitting beside the existing "changelog" pill; clicking opens `https://github.com/zayonarts/Icarus_Mod_Editor_Tool/issues/new` in the system default browser via `@tauri-apps/plugin-opener`; styled identically to the changelog pill (same height, surface background, shadow, hover fade); placeholder for a future implementation that will send reports directly to a database
-- [DEV] Item Editor: feature — full D_ItemTemplate support added to the item edit panel; a new section appears at the top of the scrollable form showing the item's D_ItemTemplate registration status; when not yet registered a warning bar with an "Attach" button is shown; attaching inserts a new `{ Name, ItemStaticData: { RowName } }` row into the `Items-D_ItemTemplate.json` mod block at the position that mirrors the item's index in D_ItemsStatic (matching the ordering system); once attached, an accent-bordered card shows: a read-only Name field always locked to the item name; a RowName field with a "⇄ Sync" toggle — when Sync is ON (default on attach) the RowName is locked and always mirrors the item name, when turned OFF the field becomes freely editable so custom RowNames like `Kit_Stone_Furnace` can be set; a "× Detach" button that removes the entry and drops the block entirely if it becomes empty; a Dynamic Data sub-section with an "+ Add Field" button (matching component Add Field styling) that appends `ItemDynamicData` entries — each entry has a PropertyType text input with a `<datalist>` offering `Fillable_Type`, `Fillable_StoredUnits`, `ItemableStack` as suggestions (Fillable_Type shows a tooltip `1=Electric 2=Water 3=Fuel 4=Oxygen`), a numeric Value input, and a "×" remove button; rename cascade fixed — `handleRename` now explicitly handles the `Items-D_ItemTemplate.json` block: renames `Name` and `RowName` (only when RowName was synced i.e. equalled the old item name) while preserving any `ItemDynamicData`; `handleRenameItemOnly` correctly leaves the block untouched
-- [DEV] Item Editor: feature — "Item only" rename option; when renaming an item that has cross-block references (e.g. used as repair cost in D_Durable), the warning panel now shows three buttons: "Rename + update refs" (existing behaviour — deep-replaces all `{ RowName, DataTableName: *ItemsStatic* }` references in every other mod block), "Item only" (new — renames only the D_ItemsStatic row and leaves all cross-block references pointing at the old name so they fall through to base-game data), and "Cancel"; "Item only" is hidden when there are no cross-block references since both paths would be identical; explanatory text below the usage list clarifies the difference; the existing "Proceed" button is now labelled "Rename + update refs" when cross-block usages are present
-- [DEV] Item Editor: feature — resizable list/editor panel divider; an invisible 8px drag handle sits between the item list column and editor column; hovering shows a `col-resize` cursor; dragging updates both panels live using `window` mousemove/mouseup listeners; width is clamped to 160–520px; on release the chosen width is persisted to `localStorage` under `item-editor-list-width` and restored on next load; right-clicking the handle shows a context menu with a "↺ Reset width" option that snaps back to the default 240px and removes the stored value
-- [DEV] Item Editor: feature — item list sidebar now supports drag-to-reorder; uses mouse-event drag (matching ModinfoEditor/TabBar pattern) with a fixed-position ghost, a dashed `accent12` placeholder at the drop target, auto-scroll at 72px edge zones (6px/frame via RAF), and no-drag guard while search is active; dragged item is fully removed from the DOM (no gap/stub) and only the dashed placeholder is visible during drag
-- [DEV] Item Editor: feature — item list sidebar shows a tooltip with the full item name after hovering a truncated entry for 3 seconds; tooltip is `position:fixed` (computed from `getBoundingClientRect` at hover), styled with `C.elevated` background, `C.border` border, 8px radius, 11px font; tooltip is cleared immediately on mouse-leave
-- [DEV] Item Editor: fix — drag-to-reorder did not trigger the Save button; root cause was that `changeMap` tracks per-item content changes only, `hasComponentChanges` explicitly excludes the D_ItemsStatic block, so a pure reorder produced `dirty = false`; fixed by adding `hasItemOrderChange` useMemo that compares the name sequence of current vs original D_ItemsStatic rows and includes it in the dirty check
-- [DEV] Item Editor: fix — `reorderModData` was silently skipping any mod block whose `CurrentFile` was not found in the `FIELD_TABLE` lookup (returning the block untouched); D_ItemTemplate (`Items-D_ItemTemplate.json`) was missing from `FIELD_TABLE` so its rows were never reordered; fixed by adding an explicit `DIRECT_NAME_COMPONENT_FILES` set for blocks whose rows are named directly after items (no `RowName` indirection) — currently contains `Items-D_ItemTemplate.json`; all other unrecognised blocks remain untouched to avoid incorrectly reordering unrelated blocks such as D_Talents that happen to share row names with items
-- [DEV] Item Editor: fix — "+ Add Stat" button in the AdditionalStats section did not work; root cause was `updateAdditionalStats` filtering out entries with an empty name before saving, so clicking the button appended `{ name: '', value: 0 }` which was immediately stripped and the blank row never rendered; fixed by introducing an `additionalStatDraft` local state that holds the displayed rows including empty ones — clicking "+ Add Stat" sets the draft, picking a stat name from the picker clears the draft and commits the named rows to the item; draft is reset on item switch
-- [DEV] All Editors: feature — multi-token search implemented across every search bar in the app; a new `searchUtils.ts` module exports `matchesSearch(query, ...targets)` which splits the query on whitespace and requires every token to match at least one word segment (prefix-first) or substring in the target; word segments are split on `_`, `-`, `.`, and space so that e.g. `"sm o p"` matches `sm_obsidian_pickaxe` and `"t c r"` matches `Tool_Coatings_Rare`; substring fallback ensures longer mid-word tokens (`"axe"`) still work; applied to: all pickers and browsers in `ItemEditorPickers.tsx`, all search bars in `ItemEditor.tsx` (row picker, stat picker, base items browser, tags picker, revert picker, resource flow picker, extra data picker, item list), `RecipesEditor.tsx` (entry list, string picker modal, talent picker, item category picker), `TalentsEditor.tsx` (tree settings search, icon browser, extra data picker), `ModinfoEditor.tsx` (mod list, GitHub file picker), `RecipeReferenceWindow.tsx` (recipe list), `DesignPanel.tsx` (CSS property picker)
-- [DEV] Item Editor: fix — component rename cascade: `updateComponentRowName` was only cascading row renames for 14 explicitly-handled components (Attachments, Meshable, Itemable, Durable, InventoryContainer, Decayable, Highlightable, Focusable, Interactable, Usable, Actionable, Deployable, Processing, Resource); all other FIELD_TABLE-backed components (ToolDamage, AmmoType, Audio, RangedWeaponData, FirearmData, FLODData, TurretData, Hitable, Equippable, Buildable, Consumable, Combustible, Armour, Ballistic, Fillable, Thermal, Experience, Slotable, Flammable, Transmutable, Generator, Weight, Farmable, LivingItem, Floatable, Rocketable, Inventory) fell through to `onItemChanged` without renaming the mod block row, causing the ✓ Modded indicator to disappear after renaming; fixed by adding a generic catch-all block that uses `tableToCurrentFile(FIELD_TABLE[fieldName])` to locate and rename the correct mod row for any unhandled component
-- [DEV] Item Editor: fix — decimal values (e.g. `1.45`) could not be typed in numeric fields; root cause was every `onChange` handler calling `parseFloat` immediately and storing the result as a number — typing `1.` produced `parseFloat("1.")` → `1`, state updated to `1`, and `String(1)` = `"1"` on next render ate the decimal point; fixed by introducing a `NumericInput` component with an internal `draft: string | null` state that preserves the in-progress string while typing and only commits the parsed float on blur; covers all float fields: Itemable generic number fields, DurableEditor Max_Durability, FocusableEditor AttachmentOffset X/Y/Z, ToolDamageEditor optional numeric fields, DeployableSetupEditor numeric option fields, DeployableEditor AudioOcclusionAmount, DecayableEditor DecayTime and SpoilTime, RecipeSetEditor float fields, AlterationEditor stat entry values, ItemEditPanel AdditionalStats entry values
-- [DEV] Item Editor: refactor — extracted all picker and browser code from `ItemEditor.tsx` into a dedicated `ItemEditorPickers.tsx` module; exports: `toGamePathAsset` and `toGamePathBP` path-conversion utilities; `useAssetBrowser` hook + `AssetBrowserOverlay` component; `useRowPicker` hook + `RowPickerOverlay` component (single-table searchable row picker with loading and optional count footer); `useRowBrowser` hook + `RowBrowserOverlay` component (tabbed All / Base Game / Modded browser with ● Mod badges, lazy-loaded base rows cached per path, search within any tab); previously all picker and overlay code was inline inside the consuming editor components, causing significant duplication
-- [DEV] Item Editor: fix — component swap via Browse: when the Browse button picks a row that already exists in the mod block (i.e., another mod row, not the current one), `updateComponentRowName` previously treated this as a rename and clobbered the existing row in-place; now detects the "swap-to-existing" case first — updates the item's component ref to point at the chosen row, and orphan-cleans the old row from the mod block if no other item still references it (including Attachments cascade cleanup of the linked Alteration row); rows not yet in the mod block still fall through to the rename branches as before
-- [DEV] Item Editor: fix — fork component button (⊗ Fork) added to ComponentCopyRow when a component row is already modded; clicking opens a popup pre-filled with a unique name (via `findDupeN`); confirming clones the existing modded row under the new name, updates the item's component ref to the new row, and deletes the original row from the mod block if no other item still references it — allowing each item to have its own independent copy of a component row without manually modding and renaming
-- [DEV] Item Editor: added inline ResourceEditor — shown below the Resource component row once modded; manages D_Resource connection entries for all 6 resource flow types (Energy, Water, Fuel, Oxygen, CrudeOil, RefinedOil); each connection has: a toggle boolean (`bHasXxxConnection`), and a row picker for the corresponding flow table (`D_Energy`, `D_Water`, etc.) whose rows are lazy-loaded and locally cached per connection type; connections can be added via "+ Add Connection" dropdown (lists only types not already present) and removed via the delete button; row rename in `updateComponentRowName` cascades to the `Traits-D_Resource.json` block so editor data stays attached after rename
-- [DEV] Item Editor: added inline InventoryContainerEditor — shown below the InventoryContainer component row once modded; fields: InventoryInfo (row picker for `D_InventoryInfo`), AttachmentSlot (integer input), bCanInventoryTick (checkbox)
-- [DEV] Item Editor: added inline InteractableEditor — shown below the Interactable component row once modded; manages the four interaction lists (WorldPressInteracts, WorldHoldInteracts, WorldAltPressInteracts, WorldAltHoldInteracts) as add/remove chip lists, each entry picked from D_Interactions via row picker
-- [DEV] Item Editor: added inline UsableEditor — shown below the Usable component row once modded; supports optional fields via an Add Field dropdown; fields include UseAction (row picker for D_UsableActions), OnUseItems (item repair-list style editor), and various boolean toggles
-- [DEV] Item Editor: added inline ActionableEditor — shown below the Actionable component row once modded; optional boolean fields (bSimultaneousActionExecution, bUseClientPrediction) managed via an Add Field dropdown
-- [DEV] CSS Styling: CSS parser hardened — block comments pre-sanitised into placeholder tokens before selector/body extraction, so any `{` or `}` inside a comment can no longer produce phantom selectors; affected the gap-utilities section whose comment used curly-brace notation
-- [DEV] CSS Styling: `[data-theme="dark"]` rule now has the same section comments as `:root` (Surface colors, Accent, Text, Border, Status, Danger, Add/success, Shadows, Border radius, Typography, Transitions) — the DesignPanel now renders cards for both rules
-- [DEV] CSS Styling: section cards — rules whose declarations contain embedded `/* section */` comments are rendered as collapsible cards per section (e.g. `:root` splits into Surface, Accent, Text, Danger etc.) instead of a flat property list
-- [DEV] CSS Styling: color pickers — any declaration value matching a hex color (`#xxx` through `#xxxxxxxx`) gets an `<input type="color">` swatch alongside the text field; changing the swatch updates the text value live; 8-digit hex (with alpha) preserves its alpha suffix on write-back
-- [DEV] CSS Styling: global.css — gap-utilities comment changed from `{size}` / `{padding|margin}` notation to `(size)` / `(padding|margin)` to avoid curly braces inside CSS comments
-- [DEV] Design Panel: outer wrapper changed from `flex: 1` to `height: 100%` — ModuleShell's content area is `position: relative`, not a flex container, so `flex: 1` was silently ignored causing the panel to overflow under the status bar
-- [DEV] Design Panel: added `minHeight: 0` to sidebar rules list and declarations list — without it flex column children default to `min-height: auto`, growing to content height and blocking `overflowY: auto` from activating (scroll was broken)
-- [DEV] App: Design Panel tab is now pinned to the far-right end of the tab bar (after the IMM Path button), is non-draggable, has no subtitle text, and hides the IMM Path widget when active
-- [DEV] App: Design Panel tab excluded from the draggable tab loop — it no longer appears in the reorderable section and cannot be moved
+- App: feature - a wiki button was added to the Modinfo Editor and Recipe Editor toolbars
+- App: release  the Recipe Editor is now publicly available to all users; it no longer requires a special unlock key
+- [DEV] Item Editor: fix - fixed an internal code error that had no impact on users
+- Recipe Editor: feature - the recipe list and editor panels now have a draggable divider so you can resize them; your chosen width is saved and restored between sessions; right-clicking the divider lets you reset it to the default width
+- [DEV] App: change  the footer "bug report" button was renamed to "Feedback" to better reflect that it also accepts suggestions
+- [DEV] App: feature - a Feedback button was added to the footer bar; clicking it opens a GitHub Issues page where you can report bugs or suggest features
+- [DEV] Item Editor: feature - added full Item Template support; the editor now shows whether an item has a template entry and lets you attach, detach, and configure it including Dynamic Data fields; renaming an item correctly updates its template entry
+- [DEV] Item Editor: feature - when renaming an item that is referenced elsewhere in the mod file, you can now choose to rename everything ("Rename + update refs"), rename only the item row ("Item only"), or cancel
+- [DEV] Item Editor: feature - the item list and editor panels now have a draggable divider so you can resize them; your chosen width is saved and restored between sessions
+- [DEV] Item Editor: feature - items in the list can now be dragged to reorder them; a ghost follows your cursor and a placeholder marks where the item will land; the list auto-scrolls when you drag near the edges
+- [DEV] Item Editor: feature - hovering over a truncated item name in the list for 3 seconds shows a tooltip with the full name
+- [DEV] Item Editor: fix - reordering items by dragging now correctly marks the file as modified and enables the Save button
+- [DEV] Item Editor: fix - Item Template entries are now kept in the correct sorted order when items are reordered
+- [DEV] Item Editor: fix - the "+ Add Stat" button in the Additional Stats section now works correctly; clicking it shows a blank row ready to fill in
+- [DEV] All Editors: feature - search bars across the whole app now support multi-word searches; typing multiple words narrows results to entries that match all of them at once
+- [DEV] Item Editor: fix - renaming a component row now correctly updates all references to that row across the entire mod file
+- [DEV] Item Editor: fix - decimal values such as 1.45 can now be typed in numeric fields without the decimal point being swallowed mid-input
+- [DEV] Item Editor: refactor  picker and browser overlays were moved into a dedicated file to improve code organisation; no user-facing change
+- [DEV] Item Editor: fix - using Browse to swap a component row to one that already exists in the mod file now correctly updates the reference and cleans up the old row, instead of overwriting the existing one
+- [DEV] Item Editor: fix - a Fork button () was added to modded component rows; clicking it creates a private copy of the row for the current item so changes to it won't affect other items sharing the same row
+- [DEV] Item Editor: added inline Resource editor  appears when the Resource component is modded; lets you add, edit, and remove flow connections (Energy, Water, Fuel, Oxygen, Crude Oil, Refined Oil)
+- [DEV] Item Editor: added inline Inventory Container editor  appears when the Inventory Container component is modded; provides fields for Inventory Info, Attachment Slot, and the inventory tick toggle
+- [DEV] Item Editor: added inline Interactable editor  appears when the Interactable component is modded; lets you manage the four interaction lists (press, hold, alt-press, alt-hold) with add/remove controls
+- [DEV] Item Editor: added inline Usable editor  appears when the Usable component is modded; optional fields can be added via a dropdown menu
+- [DEV] Item Editor: added inline Actionable editor  appears when the Actionable component is modded; optional boolean fields can be added via a dropdown menu
+- [DEV] CSS Styling: fix - a CSS comment style was being misread by the parser, causing phantom entries to appear in the Design Panel; now handled correctly
+- [DEV] CSS Styling: improve  the dark theme CSS section now has the same category labels as the root section, so all sections are visible in the Design Panel
+- [DEV] CSS Styling: improve  CSS sections are now shown as collapsible cards in the Design Panel
+- [DEV] CSS Styling: improve  colour properties in the Design Panel now show a colour picker swatch next to the value field
+- [DEV] CSS Styling: fix - a CSS comment was using curly-brace notation that confused the parser; changed to parenthesis notation
+- [DEV] Design Panel: fix - the panel now fills the content area correctly without overflowing below the status bar
+- [DEV] Design Panel: fix - the property list and declaration list inside the panel now scroll correctly
+- [DEV] App: improve  the Design Panel tab is pinned to the far right of the tab bar, cannot be dragged, and hides the IMM Path widget while active
+- [DEV] App: improve  the Design Panel tab is excluded from the draggable tab section and cannot be reordered
 
 ## v1.4.288 - March 22, 2026 - DEV-Only Update (no impact for regular users)
-- [DEV] Item Editor: fix — React warning "Cannot update a component ('ItemEditor') while rendering a different component" — resolved by moving all `commit` / `onModUpdated` calls out of state-updater functions in DurableEditor (`update`), HighlightableEditor, FocusableEditor, UsableEditor, ActionableEditor, ToolDamageEditor, and DeployableSetupEditor (`removeField`); each function now computes the next value outside the setter, calls `setState` with a plain value, then calls `commit` as a separate sequential statement
-- [DEV] Item Editor: fix — NSLOCTEXT key sync: when an Itemable component row is renamed (via the ComponentCopyRow name field), all NSLOCTEXT keys inside that row that start with "OldName-" are now rewritten to "NewName-" so DisplayName and similar loctext fields stay correctly keyed after a rename; previously the row Name changed but the NSLOCTEXT second argument kept the old name
-- [DEV] Item Editor: fix — NSLOCTEXT key sync: same fix applied to Highlightable component row renames — DisplayName and Description NSLOCTEXT keys now update to match the new row name when the Highlightable row is renamed
-- [DEV] Item Editor: refactor — extracted shared reKeyNsLocTextInRow helper function used by handleRsRename (RecipeSets), Itemable rename, and Highlightable rename; replaces the previous inline loop that was duplicated inside handleRsRename
-- [DEV] Item Editor: ProcessingEditor — DefaultRecipeSet field is now dirty-tracked live on every keystroke (previously only triggered dirty on blur); fix — onChange now calls commit directly so modData updates immediately, making the Save button activate as the user types instead of only after leaving the field
-- [DEV] Item Editor: ProcessingEditor — DefaultRecipeSet ↩ Base button now shows a confirmation popup (matching the main Processing component Base button style) before reverting — displays the row name and file, with Cancel and ↩ Revert to Base buttons; previously it reverted immediately with no confirmation
-- [DEV] Item Editor: ProcessingEditor — removed the duplicate "Mod it" button from the DefaultRecipeSet field; the Mod button itself is now the clickable action when not yet modded (shows "…" while copying, "✗ Error" on failure); the ✓ Modded badge remains a disabled indicator when already modded
-- [DEV] Item Editor: ProcessingEditor — DefaultRecipeSet Mod button was non-functional (badge was always disabled regardless of state); fixed — Mod button is now a proper clickable button that calls modRecipeSet when not yet modded
-- [DEV] Item Editor: RecipeSetEditor — header row name text now live-updates while the user types in the DefaultRecipeSet input field (previously only updated on blur/commit); implemented by passing rsNameDraft as rsDisplayName prop and displaying it instead of the static rsRowName prop
-- [DEV] Item Editor: ProcessingEditor — handleRsRename now re-keys NSLOCTEXT values in RecipeSetName and DisplayText fields when a recipe set row is renamed: replaces "OldName-Suffix" with "NewName-Suffix" in all string values of the renamed row, keeping loctext keys in sync with the row name
-- [DEV] Item Editor: ProcessingEditor — DefaultRecipeSet row now has inline Mod/Base buttons matching the ComponentCopyRow style: a disabled ✓ Modded badge + separate ↩ Base button when already modded, a Mod button when not; replaces the previous single-button toggle that used incorrect ad-hoc styles
-- [DEV] Item Editor: RecipeSetEditor — RecipeSetName and DisplayText fields now render as loctext inputs: display shows the human-readable label (via parseNsLocText), saving writes a full NSLOCTEXT("D_RecipeSets", "RowName-FieldName", "label") value; was previously a plain text input
-- [DEV] Item Editor: RecipeSetEditor — RecipeSetIcon field now uses the asset browser (Browse button → file picker overlay) instead of a plain text input; overlay matches the ItemableEditor asset browser style exactly: uppercase muted title, monospace folder headers, indented filenames, file count footer, no-scrollbar scroll container
-- [DEV] Item Editor: ProcessingEditor — modFilePath prop threaded through to RecipeSetEditor so the asset browser can resolve the mod folder for .uasset discovery
-- [DEV] Item Editor: ProcessingEditor — DefaultRecipeSet picker upgraded from a simple flat-list overlay to the tabbed All / Base Game / Modded row browser (same pattern as DeployableEditor's variant row browser); base-game rows are lazy-loaded once from D_RecipeSets.json; modded rows are sourced live from the mod's Crafting-D_RecipeSets.json block and shown with a ● Mod badge; tabs filter the list to All, Base Game only, or Modded-only; search filters within the active tab; currently selected row is highlighted
-- [DEV] Item Editor: Processing component — added inline ProcessingEditor; when a Processing component row is modded, an inline editor appears below the component row with all D_Processing fields: Behaviour (text), DefaultRecipeSet (row picker for D_RecipeSets), RequiresEnergy, bRequiresShelter, AutoSelectRecipe, ManualActivation (booleans), QueueSize, MaxMilliwattage (integers), EffectedByPlayerStats, SendOutputDirectlyToPlayer, AutoTurnOffDeviceWhileNotProcessing (booleans); defaults applied from D_Processing Defaults block if not overridden by a base-game row; row rename is cascaded to the Processing block so editor settings stay attached
-- [DEV] Item Editor: fix — EndOfMod block is now guaranteed to be present and last in the Rows array on every save; if it was missing (e.g. accidentally dropped by a prior operation) it is synthesised automatically; save logic now processes EndOfMod separately rather than inside the reduce that drops empty blocks, so it can never be silently removed
-- [DEV] Item Editor: fix — ↩ Base revert now explicitly preserves the EndOfMod block; previously the reduce used to drop blocks with no File_Items, which also caught EndOfMod and removed it from the in-memory state before the next save
-- [DEV] Item Editor: component rows — added ↩ Base button (visible when a component row is already modded); clicking it removes the mod override for that row from the component block without touching the component field on the item, so the item continues using the base-game row data; if the block becomes empty after removal it is dropped entirely
-- [DEV] Item Editor: component rows — ↩ Base revert also cascades to child RowName references: any { RowName } objects found in the modded component row are looked up across all other known component blocks, and matching mod overrides are removed and shown in the confirmation popup
-- [DEV] Item Editor: Remove item — removing an item now also cleans up any orphaned modded component rows that were tied exclusively to that item; if a component row (Meshable, Itemable, Durable, etc.) is not referenced by any remaining modded item, its mod override is removed from the component block; orphaned child RowName refs inside those component rows are also cascaded and cleaned; blocks that become empty are dropped entirely
-- [DEV] Item Editor: fix — component blocks that become empty at save time are now dropped entirely from the Rows array instead of being written as bare { "CurrentFile": "..." } objects with no File_Items
-- [DEV] Item Editor: fix — clicking Mod on any component (Meshable, Itemable, etc.) now correctly marks the file as dirty and enables the Save button; previously only D_ItemsStatic row changes triggered the dirty flag, leaving component block additions undetected
-- [DEV] Item Editor: fix — saving now strips empty File_Items arrays from all blocks and removes the File_Items key from the EndOfMod block entirely, preventing spurious empty arrays from being written to disk
-- [DEV] Item Editor: fix — saved JSON now uses 4-space indentation to match the format used by Recipes Editor, Talent Editor, and the rest of the app
-- [DEV] Talent Editor: fix — icon fetch progress text was rendering unicode escape sequences as literal text (e.g. \u2026 instead of …); moved to a template literal so escapes are interpreted correctly
+- [DEV] Item Editor: fix - fixed a harmless internal warning about nested component updates; no user-facing change
+- [DEV] Item Editor: fix - when an Itemable component row is renamed, the internal display name and description keys now update to match the new row name
+- [DEV] Item Editor: fix - the same display name and description key update now also applies when a Highlightable component row is renamed
+- [DEV] Item Editor: refactor  extracted a shared helper used by several rename handlers; no user-facing change
+- [DEV] Item Editor: ProcessingEditor - the DefaultRecipeSet field now marks the file as modified as you type, enabling the Save button right away instead of waiting until you click away
+- [DEV] Item Editor: ProcessingEditor - the  Base (revert) button on the DefaultRecipeSet field now shows a confirmation popup before reverting, instead of reverting immediately with no warning
+- [DEV] Item Editor: ProcessingEditor - the duplicate Mod button was removed from the DefaultRecipeSet field; the single correct Mod button now works as expected
+- [DEV] Item Editor: ProcessingEditor - the DefaultRecipeSet Mod button now works correctly; it was previously always shown as disabled
+- [DEV] Item Editor: RecipeSetEditor - the recipe set name shown in the card header now updates live as you type, instead of only after you click away
+- [DEV] Item Editor: ProcessingEditor - renaming a recipe set row now also updates the display name and description keys to match the new name
+- [DEV] Item Editor: ProcessingEditor - the DefaultRecipeSet row now shows a proper Mod / - Base button pair, matching the style used by other component rows
+- [DEV] Item Editor: RecipeSetEditor - the Recipe Set Name and Display Text fields now show the human-readable text while editing and save in the correct format to the file
+- [DEV] Item Editor: RecipeSetEditor - the Recipe Set Icon field now opens an asset browser picker instead of requiring you to type a path manually
+- [DEV] Item Editor: ProcessingEditor - the mod file path is now passed through correctly so the asset browser can find files inside the mod folder
+- [DEV] Item Editor: ProcessingEditor - the DefaultRecipeSet picker was upgraded to the full tabbed browser (All / Base Game / Modded) used by other pickers in the app
+- [DEV] Item Editor: added inline Processing editor  appears when the Processing component is modded; exposes all D_Processing fields with the appropriate input types
+- [DEV] Item Editor: fix - the EndOfMod marker is now always present and always the last entry in the file when saving; if it was accidentally missing it is automatically restored
+- [DEV] Item Editor: fix - reverting a component row to base game no longer accidentally removes the EndOfMod marker from the file
+- [DEV] Item Editor: component rows - added a  Base button to any modded component row; clicking it removes your override and reverts that row to base-game data
+- [DEV] Item Editor: component rows - reverting a component row also removes any child row overrides that were only referenced by that component
+- [DEV] Item Editor: remove item - removing an item now also cleans up any component row overrides that were only used by that item, keeping the mod file tidy
+- [DEV] Item Editor: fix - component sections that become empty are no longer written as bare empty objects in the saved file
+- [DEV] Item Editor: fix - clicking Mod on any component now correctly marks the file as modified and shows the Save button as active
+- [DEV] Item Editor: fix - empty internal arrays are no longer written to the output file, keeping saves clean
+- [DEV] Item Editor: fix - saved files now use 4-space indentation, matching the format used by the rest of the app
+- [DEV] Talent Editor: fix - icon download progress messages were showing raw character codes (e.g. \u2026) instead of the actual symbols; now displays correctly
 
-## v1.4.262 — March 21, 2026 — DEV-Only Update (no impact for regular users)
-- [DEV] Item Editor: fix — resolved infinite re-render loop (maximum update depth exceeded) that occurred when the Items module was open; caused by the dirty-state useEffect firing on every App render due to the inline onDirtyChange prop creating a new function reference each time; now guarded by a ref that only propagates when the dirty boolean actually changes
-- [DEV] Item Editor: rename — Cancel button on the warning panel now fully exits rename mode (same as the × button), instead of only dismissing the warning while leaving the rename input open
-- [DEV] Item Editor: rename — warning panel (base-game override / cross-block usages) now renders full-width below the name+Remove row so the Remove button stays fixed in the top-right corner
-- [DEV] Item Editor: rename — trying to rename to a base-game item name shows the same inline warning panel (same style as the cross-block usages warning); user must click Proceed to confirm the override or Cancel to go back
-- [DEV] Item Editor: rename — attempting to rename to a name already used by another item in the same mod file is now a hard block (error message, no proceed path)
-- [DEV] Item Editor: rename — "Proceed" confirmation step now also cascade-updates all D_ItemsStatic RowName references found in other mod blocks (e.g. recipes with this item as input/output) so references remain consistent after rename
-- [DEV] Item Editor: rename — clicking OK when the item is referenced in other mod blocks now shows an inline warning listing every affected row (block file › row name) before proceeding; user must click Proceed or Cancel
-- [DEV] Item Editor: rename — replaced blur-to-confirm behavior with an explicit OK button; rename only applies when OK (or Enter) is pressed; Escape or × cancels without changes; component rows are no longer auto-renamed (user manages those independently)
-- [DEV] Item Editor: fix — reverting an item or an individual field now restores the corresponding original component block rows from the saved snapshot, fixing modded field indicators disappearing after a revert
-- [DEV] Item Editor: fix — reverting a renamed item now correctly restores both the item name and all other field values without wiping field edits made independently before or after the rename
-- [DEV] Item Editor: renaming an item now records as a single "⟳ renamed" change entry (old name → new name) instead of a separate added + removed pair
-- [DEV] Item Editor: Changes panel — auto-closes when all changes have been individually reverted; Revert All button is hidden when no changes remain
-- [DEV] Item Editor: Changes panel — Revert All button restores all items to their last-saved state at once
-- [DEV] Item Editor: Changes panel — per-field ↩ revert button reverts an individual field change without affecting other edits on the same item; also restores the linked component block row so modded indicators remain correct
-- [DEV] Item Editor: Changes panel — per-item Revert button restores that item to its last-saved state, including all linked component block rows
-- [DEV] Item Editor: Changes panel — per-item card shows each changed field with old value (red strikethrough) and new value (green), matching the Recipes Editor diff style
-- [DEV] Item Editor: added Changes panel (via toolbar Changes button) — lists all pending additions, modifications, renames, and removals with colored type badges and change counts in the header
-- [DEV] Item Editor: item list shows colored dot indicators per item — green dot for added items, amber dot for modified or renamed items
-- [DEV] Item Editor: mod file is auto-created (blank) when the selected file path does not yet exist on disk
-- [DEV] Item Editor: added save caching — all edits are held in memory and only written to disk when the toolbar Save button is clicked; Save button is disabled when there are no unsaved changes
-- [DEV] Item Editor: DeployableSetup SnapActorTags and SnapSocketsOrTags fields now use inline chip-style tag editor (add via Enter/comma, remove per chip) instead of comma-separated text input
-- [DEV] Item Editor: DeployableSetup Add Field dropdown — fixed overflow:hidden overriding overflowY:auto, dropdown now scrolls correctly
-- [DEV] Item Editor: Deployable variants — copy button label changed from "Mod Setup" to "Mod" to match all other editors
-- [DEV] Item Editor: DeployableSetup asset browser restyled to match the row browser (flat monospace list, filename + game path subtitle, no folder headers)
-- [DEV] Item Editor: Deployable variants — Browse button moved after Mod button for consistency with other editors
-- [DEV] Item Editor: Deployable variants — added Browse button (row browser) to pick D_DeployableSetup rows from base game and mod, with All/Base Game/Modded tabs and ● Mod badges
-- [DEV] Item Editor: Deployable variants section header now shows "D_DeployableSetup" subtitle for clarity
-- [DEV] Item Editor: added Deployable Setup editor — D_DeployableSetup fields (blueprint, icon, mesh, sound, placement settings) shown inline per variant once modded
-- [DEV] Item Editor: added Deployable component editor — D_Deployable fields (Behaviour, weather flags, audio occlusion, variants list with add/remove)
-- [DEV] Item Editor: renaming an item cascades to all linked component rows that share the old item name (Attachments + Alteration, Meshable, Itemable, Durable, InventoryContainer, Decayable, Highlightable, Focusable, Interactable, Usable, Actionable, Deployable) — custom-named component rows are left untouched
-- [DEV] Item Editor: item name (D_ItemsStatic row) is now editable — click the ✎ pencil icon next to the name to rename inline; confirms on Enter or blur, cancels on Escape; duplicate names are rejected with an error message
-- [DEV] Item Editor: Generated_Tags are now automatically kept in sync with the item's components — adding, removing, or browsing a component updates the corresponding Traits.* gameplay tag (21 components mapped: Meshable, Itemable, Interactable, Highlightable, Hitable, Equippable, Actionable, Buildable, Consumable, Usable, Combustible, Deployable, Armour, Ballistic, Fillable, Durable, Rocketable, Inventory, Processing, Thermal, Flammable)
-- [DEV] App: changelog modal — fixed "Item Editor" category label (was incorrectly displaying as "Item Creator")
-- [DEV] App: changelog modal — fixed "All Editors" and "Item Editor" DEV entries now correctly grouped under their own labeled sections
-- [DEV] App: changelog modal — removed duplicate category aliases (Recipe Editor / Talents Editor)
+## v1.4.262  March 21, 2026  DEV-Only Update (no impact for regular users)
+- [DEV] Item Editor: fix - fixed an infinite loop that could occur when the Item Editor was open; no user-facing change
+- [DEV] Item Editor: rename - the Cancel button on the rename warning panel now fully exits rename mode, instead of only hiding the warning while leaving the rename box open
+- [DEV] Item Editor: rename - the rename warning panel now renders full-width below the name row, keeping the Remove button fixed in the top-right corner
+- [DEV] Item Editor: rename - renaming an item to a base-game item's name now shows a warning before allowing it; you must click Proceed to confirm
+- [DEV] Item Editor: rename - renaming an item to a name already used by another item in the same mod file is now blocked entirely with an error message
+- [DEV] Item Editor: rename - confirming a rename also updates all other places in the mod file that reference this item by name
+- [DEV] Item Editor: rename - if the item is referenced elsewhere in the mod file, a warning now lists every affected row before you can confirm the rename
+- [DEV] Item Editor: rename - renaming now requires pressing OK or Enter to confirm; pressing Escape or - cancels without making any changes
+- [DEV] Item Editor: fix - reverting an item now also correctly restores all linked component rows to their saved state
+- [DEV] Item Editor: fix - reverting a renamed item now correctly restores the original name and all field values without losing any independent edits
+- [DEV] Item Editor: renaming now shows as a single "renamed" entry in the Changes panel instead of a separate add and remove pair
+- [DEV] Item Editor: Changes panel - the panel now auto-closes when all changes have been individually reverted
+- [DEV] Item Editor: Changes panel - a Revert All button lets you restore everything to the last-saved state at once
+- [DEV] Item Editor: Changes panel - each changed field now has its own  revert button so you can undo individual changes without affecting others
+- [DEV] Item Editor: Changes panel - each item shows which fields changed, with the old value in red strikethrough and the new value highlighted in green
+- [DEV] Item Editor: added a Changes panel  accessible via the toolbar Changes button; lists all pending additions, edits, renames, and removals
+- [DEV] Item Editor: item list - a coloured dot now appears next to modified items; green for newly added items, amber for modified or renamed ones
+- [DEV] Item Editor: mod file is automatically created blank if the selected file path does not yet exist
+- [DEV] Item Editor: all edits are held in memory and only written to disk when you click the Save button; Save is disabled when there is nothing new to save
+- [DEV] Item Editor: DeployableSetup - the SnapActorTags and SnapSocketsOrTags fields now use a chip-style tag editor instead of a plain comma-separated text input
+- [DEV] Item Editor: DeployableSetup - the Add Field dropdown now scrolls correctly when the list is long
+- [DEV] Item Editor: Deployable variants - the copy button label changed from "Mod Setup" to "Mod" to match other editors
+- [DEV] Item Editor: DeployableSetup - the asset browser was restyled to match the row browser look used elsewhere in the app
+- [DEV] Item Editor: Deployable variants - the Browse button was moved to after the Mod button for visual consistency
+- [DEV] Item Editor: Deployable variants - added a Browse button to pick setup rows from a tabbed browser (All / Base Game / Modded)
+- [DEV] Item Editor: Deployable variants - the section header now shows "D_DeployableSetup" as a subtitle for clarity
+- [DEV] Item Editor: added inline Deployable Setup editor  appears when a Deployable variant row is modded; lets you edit blueprint, icon, mesh, sound, and placement settings
+- [DEV] Item Editor: added inline Deployable component editor - lets you configure behaviour, weather flags, audio occlusion, and manage the variant list
+- [DEV] Item Editor: renaming an item now also renames all linked component rows that shared the old item name (Attachments, Meshable, Itemable, Durable, and more); custom-named rows are left untouched
+- [DEV] Item Editor: item names are now editable  click the pencil icon next to the name to rename; press Enter or click away to confirm, or press Escape to cancel; duplicate names are rejected
+- [DEV] Item Editor: gameplay tags (such as Traits.Deployable) are now automatically kept in sync when you add or remove a component from an item
+- [DEV] App: changelog modal - the Item Editor category label was incorrectly showing as "Item Creator"; now fixed
+- [DEV] App: changelog modal - "All Editors" and "Item Editor" developer entries now correctly appear under their own labelled sections
+- [DEV] App: changelog modal - removed duplicate category entries
 
-## v1.4.227 — March 20, 2026
-- App: update gate download button now shows live progress bar and percentage (same as update banner)
-- [DEV] All Editors: added tinted repeating background pattern (IconBG-Pattern-1) tinted to each module's accent color
-- Modinfo Editor: background pattern visible only when no file is selected, hidden while editing
-- Recipes Editor: background pattern visible only on no-IMM and no-file-open screens
-- [DEV] Item Editor: background pattern visible only on no-IMM and no-file-open screens
-- [DEV] Talent Editor: background pattern visible only on the no-IMM screen
+## v1.4.227  March 20, 2026
+- App: the download progress bar on the update prompt now shows live progress and a percentage
+- [DEV] All Editors: added a subtle tinted background pattern to each module's empty state, tinted to the module's accent colour
+- Modinfo Editor: the background pattern is visible only when no file is open
+- Recipe Editor: the background pattern is visible only on the start screens (no IMM path set, or no file open)
+- [DEV] Item Editor: the background pattern is visible only on the start screens (no IMM path set, or no file open)
+- [DEV] Talent Editor: the background pattern is visible only on the no-IMM-path screen
 
-## v1.4.221 — March 20, 2026
-- App: changelog categories — changes are now grouped by module with colored dividers
-- App: changelog DEV section — development-only changes shown separately, dimmed, at the bottom of each entry
-- App: changelog lines now auto-capitalize
+## v1.4.221  March 20, 2026
+- App: changelog entries are now grouped by module with colour-coded dividers
+- App: developer-only changelog entries are now shown in a separate dimmed section at the bottom of each version
+- App: changelog text now auto-capitalises the first letter of each entry
 
-## v1.4.218 — March 19, 2026
-- [DEV] Build: removed bundled development talent icons from the executable — exe is now significantly lighter
-- [DEV] Talent Editor: icons are now fetched from GitHub at runtime and stored next to the exe (unchanged behaviour)
-- [DEV] Talent Editor: added ⟳ reload button to refresh icons from local cache without re-downloading
-- [DEV] Talent Editor: icon URLs are now cache-busted after each fetch so newly downloaded icons show immediately
-- Modinfo Editor: warn when a mod's description is empty (Daedalus rejects empty-string description)
-- Modinfo Editor: show red ⚠ badge on mod list items with no description
-- Modinfo Editor: sanitize empty-string optional fields on file load so they are not written back
-- Modinfo Editor: show amber ⚠ badge on mod list items with duplicate names
+## v1.4.218  March 19, 2026
+- [DEV] Build: removed bundled development talent icons from the installer, making it significantly smaller
+- [DEV] Talent Editor: talent icons are now fetched from GitHub on first launch and cached next to the app; subsequent launches use the local copies
+- [DEV] Talent Editor: added a reload button to refresh icons from the local cache without re-downloading
+- [DEV] Talent Editor: newly downloaded icons now show up immediately without needing to restart the app
+- Modinfo Editor: a warning is now shown if a mod has an empty description, since Daedalus rejects mods with no description
+- Modinfo Editor: mods with no description now show a red  badge in the mod list
+- Modinfo Editor: empty optional fields are now automatically cleaned up when loading a file, so they are not written back unnecessarily
+- Modinfo Editor: mods with duplicate names now show an amber - badge in the mod list
 
-## v1.4.210 — March 19, 2026
-- App: fixed update progress bar — now streams download chunks with live percentage
-- App: fixed batch script closing after successful update; stays open only on error
-- App: fixed "batch file cannot be found" error during self-replacement
+## v1.4.210  March 19, 2026
+- App: fixed the update download progress bar  it now shows live progress as each chunk arrives
+- App: fixed the update helper script - it now stays open only when there is an error, instead of always closing immediately after finishing
+- App: fixed a "batch file cannot be found" error that was occurring during the self-update process
 
-## v1.4.207 — March 19, 2026
-- App: redesigned changelog modal — styled version cards, collapsible entries, latest pinned open
-- App: auto-updater overhaul — streaming download progress, UpdateBanner and UpdateGate components
-- App: added 45s CDN cache retry to ensure update detection on fresh installs
+## v1.4.207  March 19, 2026
+- App: the changelog modal was redesigned with styled version cards, collapsible entries, and the latest version pinned open by default
+- App: the auto-updater was overhauled with a live download progress bar, an update notification banner, and an update gate screen
+- App: added a retry on startup to ensure the update checker reliably detects new versions on fresh installs
 
-## v1.4.204 — March 19, 2026
-- App: test update — verify update progress button styling and streaming download
+## v1.4.204  March 19, 2026
+- App: test update - verify update progress button styling and streaming download
 
-## v1.4.203 — March 19, 2026
-- App: test update — verify optional UpdateBanner display and styling
+## v1.4.203  March 19, 2026
+- App: test update - verify optional UpdateBanner display and styling
 
-## v1.4.202 — March 19, 2026
-- App: test update — version bump to verify the auto-updater flow
+## v1.4.202  March 19, 2026
+- App: test update - version bump to verify the auto-updater flow
 
-## v1.4.201 — March 19, 2026
+## v1.4.201  March 19, 2026
 - App: initial public release
 - Modinfo Editor: initial release
