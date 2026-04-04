@@ -1,5 +1,6 @@
-## v1.4.415 - April 3, 2026 - Talent Editor Heavy Rework!
+## v1.4.415-416 - April 3, 2026 - Talent Editor Heavy Rework!
 [Update Message]: Talent Editor Heavy Rework!
+- [DEV] Talent Editor: v1.4.416 - Fixed a quick quick quick fix for a dropdown missed redesign.
 - [DEV] Talent Editor: Asset picker rebuilt from scratch, looks clear and visually pleasing for users.
 - [DEV] Talent Editor: Changed few fields and their behavior, pickers generalized.
 - App: Installed local MCP server for better testing purposes and faster app development.
