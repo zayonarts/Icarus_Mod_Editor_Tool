@@ -1,3 +1,11 @@
+## v1.4.415 - April 3, 2026 - Talent Editor Heavy Rework!
+[Update Message]: Talent Editor Heavy Rework!
+- [DEV] Talent Editor: Asset picker rebuilt from scratch, looks clear and visually pleasing for users.
+- [DEV] Talent Editor: Changed few fields and their behavior, pickers generalized.
+- App: Installed local MCP server for better testing purposes and faster app development.
+- [DEV] Talent Editor: Visual Overhaul to fit the rest of the app.
+- [DEV] Talent Editor: added all missing fields and structure for properties panel.
+- App: minor fixes to update process.
 
 ## v1.4.409 - April 3, 2026
 [Update Message]: Visual Overhaul Remaining Stuff - Wiki and Base Recipe Viewer. + Minor Fix
