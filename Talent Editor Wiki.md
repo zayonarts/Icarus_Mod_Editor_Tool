@@ -323,7 +323,18 @@ The snap grid dropdown (controls bar, bottom-right) controls position snapping w
 | **50 px** | Default grid |
 | **100 px** | Large grid |
 
-When snapping is active, dragged node positions are rounded to the nearest grid multiple.
+When snapping is active, node positions snap according to the **Round Snap** mode (see below).
+
+### Round Snap
+
+The **Round Snap** button (in the controls bar, next to the snap grid dropdown) controls *how* snapping is applied when dragging nodes.
+
+| State | Behaviour |
+|---|---|
+| **On (green)** | Dragged nodes snap to the nearest absolute grid multiple — e.g. a node dragged to 63 px snaps to 50 px or 100 px. This is the default. |
+| **Off** | Dragged nodes snap in increments of the grid size *from their original position* — e.g. a node at 13 px moves to 63 px, 113 px, etc., preserving its offset. |
+
+Use **Round Snap off** when your nodes are intentionally offset from the grid and you want to keep that offset while still moving in clean steps. The setting is persisted across sessions.
 
 ### Fit all nodes
 
@@ -334,7 +345,7 @@ Click the **grid icon** button (⊞) in the controls bar to auto-zoom and pan so
 Located at the bottom-right corner of the canvas. Glass-styled floating bar containing:
 
 ```
-[ Snap Grid ▾ ] │ [ − ] 100% [ + ] │ [ ⊞ ]
+[ Snap Grid ▾ ] [ Round Snap ] │ [ − ] 100% [ + ] │ [ ⊞ ]
 ```
 
 ---
@@ -772,7 +783,7 @@ The **Paste** option appears in the context menu only when the clipboard has con
 - **Shift+Drag to wire** — hold Shift and drag from one node to another to quickly add dependency connections, rather than editing the RequiredTalents list manually.
 - **Right-click connections to cut** — instead of editing RequiredTalents, just right-click a connection line on the canvas to remove that dependency.
 - **Use reroute nodes** — add reroute diamonds to create clean bend points in your connection lines, especially when lines cross or overlap.
-- **Snap grid for alignment** — use 50 px or 100 px grid snap to keep nodes aligned. Switch to 5 px or 10 px for fine adjustments.
+- **Snap grid for alignment** — use 50 px or 100 px grid snap to keep nodes aligned. Switch to 5 px or 10 px for fine adjustments. Toggle **Round Snap** off if your nodes sit at offsets from the grid and you want to preserve that offset while still moving in even steps.
 - **Fit all nodes** — click the grid (⊞) button in the controls bar to instantly zoom and pan to see all nodes in the current tree.
 - **Copy fields across nodes** — use the Copy submenu (right-click) to copy a field group from one node, then Paste onto another. Great for duplicating rewards or conditions.
 - **Page Editor for structure** — use the Page Editor mode to add new archetypes and trees before populating them with talent nodes in Editor mode.
