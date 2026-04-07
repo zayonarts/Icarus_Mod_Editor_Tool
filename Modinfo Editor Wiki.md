@@ -37,14 +37,14 @@ A single file can contain **multiple mod entries**, each described by the fields
 | Field | Required | Description |
 |---|---|---|
 | `name` | Yes | Display name of the mod |
-| `author` | Yes | Author name or tag |
-| `version` | Yes | Version string, e.g. `1.0.0` or `1.0.0.220` |
-| `compatibility` | Yes | ICARUS week number this mod is built for (e.g. `220`) |
+| `author` | No | Author name or tag |
+| `version` | No | Version string, e.g. `1.0.0` or `1.0.0.220` |
+| `compatibility` | No | ICARUS week number this mod is built for (e.g. `220`) |
 | `description` | No | Free-text description shown in the mod browser |
 | `imageURL` | No | Direct URL to a preview image (`.png`, `.jpg`, `.gif`, etc.) |
 | `readmeURL` | No | Direct URL to a readme/documentation file (`.md`, `.txt`, etc.) |
-| `files.exmodz` | Yes* | Direct URL to the `.exmodz` release file |
-| `files.pak` | Yes* | Direct URL to the `_p.pak` release file |
+| `files.exmodz` | No* | Direct URL to the `.exmodz` release file |
+| `files.pak` | No* | Direct URL to the `_p.pak` release file |
 
 > *At least one of `files.exmodz` or `files.pak` must be set for the mod to be downloadable.  
 > The editor will warn you if neither is filled in.
