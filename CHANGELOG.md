@@ -1,4 +1,8 @@
-## v1.4.416 - April 3, 2026 - Talent Editor Heavy Rework!
+## v1.4.417 - April 7, 2026
+[Update Message]: Minor Updates.
+- [DEV] Talent Editor: Added "Round Snap" button (in the controls bar, next to the snap grid dropdown) controls *how* snapping is applied when dragging nodes.
+
+## v1.4.416 - April 3, 2026
 [Update Message]: Talent Editor Heavy Rework!
 - [DEV] Talent Editor: Fixed a quick quick quick fix for a dropdown missed redesign.
 - [DEV] Talent Editor: Asset picker rebuilt from scratch, looks clear and visually pleasing for users.
