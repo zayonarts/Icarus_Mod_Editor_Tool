@@ -1,5 +1,6 @@
-## v1.5.430 - April 16, 2026
+## v1.5.431 - April 16, 2026
 [Update Message]: Minor Updates and Scripts Module on Dev Build.
+- [DEV] App: Fixed changelog missing "Scripts" label.
 - [DEV] Scripts: Working on a Python Script runner, needs expanding of code, partially functional.
 - [DEV] App: Backend fixes and optimizations.
 
