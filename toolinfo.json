@@ -3,11 +3,11 @@
                   {
                       "name":  "Icarus Mod Editor Tool",
                       "author":  "Zayon",
-                      "version":  "1.5.430",
+                      "version":  "1.5.431",
                       "compatibility":  "all",
                       "description":  "This is only for users modding with IMM (icarus Mod Manager by Jimk72), is heavily dependent on it because uses all data from it.",
                       "fileType":  "EXE",
-                      "fileURL":  "https://github.com/zayonarts/Icarus_Mod_Editor_Tool/releases/download/v1.5.430/IcarusModEditorTool.exe",
+                      "fileURL":  "https://github.com/zayonarts/Icarus_Mod_Editor_Tool/releases/download/v1.5.431/IcarusModEditorTool.exe",
                       "imageURL":  "https://github.com/zayonarts/Icarus_Mod_Editor_Tool/blob/main/IMET-Icon.png",
                       "readmeURL":  "https://github.com/zayonarts/Icarus_Mod_Editor_Tool/raw/main/README.md"
                   }
