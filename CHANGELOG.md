@@ -1,3 +1,8 @@
+## v1.5.430 - April 16, 2026
+[Update Message]: Minor Updates and Scripts Module on Dev Build.
+- [DEV] Scripts: Working on a Python Script runner, needs expanding of code, partially functional.
+- [DEV] App: Backend fixes and optimizations.
+
 ## v1.4.417 - April 7, 2026
 [Update Message]: Minor Updates.
 - [DEV] Talent Editor: Added "Round Snap" button (in the controls bar, next to the snap grid dropdown) controls *how* snapping is applied when dragging nodes.
